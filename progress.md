@@ -24,8 +24,10 @@
 |---|---|---|
 | 1 | static config/manifest checks | PASS (`cupidctl verify-*`) |
 | 2 | compile BootShim + ASL | PASS in CI |
-| 3 | QEMU AAVMF boot of `cupid-diag.efi` | CI |
+| 3 | QEMU AAVMF boot of `cupid-diag.efi` | PASS in CI (run `45906870235`) |
 | 4 | physical Xiaomi 12 boot | BLOCKED: no vendor blobs / Windows image |
+
+CI: `https://github.com/hrihq/woa-cupid/actions/runs/45906870235` (green).
 
 ## Checkpoint: Ready for boot-to-Windows
 
