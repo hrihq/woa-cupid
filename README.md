@@ -16,7 +16,7 @@ Windows-on-ARM64 proof of concept for Xiaomi 12 (`cupid`, **SM8450 / waipio**).
 | `firmware/edk2/` | minimal EDK2 overlay (DEC/DSC/FDF/INF) |
 | `firmware/out/` | build artifacts, gitignored |
 | `drivers/manifest.json` | driver inventory, no binaries |
-| `tools/cupidctl/` | placeholder control CLI (`verify-*` implemented) |
+| `tools/cupidctl/` | control CLI: `verify-*`, `flash-image`/`apply-acpi` dry-run only |
 | `tools/cupid-diag/` | UEFI marker app for QEMU smoke test |
 | `setup_cupid.ps1` | driver staging/install + diag generation |
 | `tests/` | offline E2E and QEMU AAVMF smoke test |

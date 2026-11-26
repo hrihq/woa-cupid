@@ -7,8 +7,15 @@ recovery path (EDL / stock ROM) before continuing.
 1. Build or download `firmware/out/cupid_bootshim.bin` and the AML tables.
 2. Assemble the boot image: header v4, gzip kernel, append `cupid.dtb`,
    then BootShim + UEFI FD at `0xA7100000`.
-3. Flash the resulting image to the boot slot with your preferred fastboot
-   or EDL tool. Keep the other slot stock.
+3. Validate the image and AML plan first (M3 dry-run; writes nothing):
+
+   ```sh
+   cargo run -q -p cupidctl -- flash-image --image firmware/out/boot.img --slot a
+   cargo run -q -p cupidctl -- apply-acpi --aml firmware/out/DSDT.aml
+   ```
+
+   `--execute` is intentionally refused. Flash with your own fastboot/EDL
+   tool. Keep the other slot stock.
 4. Boot once without drivers; confirm serial/output from `cupid-diag.efi`.
 5. On a Windows 11 ARM64 image, stage drivers:
 

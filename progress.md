@@ -38,7 +38,11 @@ CI: `https://github.com/hrihq/woa-cupid/actions/runs/45906870235` (green).
 3. Device-specific ACPI values validated against that DTB.
 4. Tier 3 green and Tier 4 attempted on a device with backup/restore path.
 
-## M3 (planned)
+## M3 — cupidctl dry-run tooling — DONE (no partition writes)
 
-- `cupidctl flash-image --image <img>` and `cupidctl apply-acpi --aml <file>`:
-  placeholders return `NOT IMPLEMENTED`.
+- [x] `flash-image --image <img> [--slot a|b]`: size/slot validation + plan;
+      `--execute` refused.
+- [x] `apply-acpi --aml <file>`: signature, declared length, checksum validation;
+      `--execute` refused.
+- [x] 4 unit tests; exercised against CI AML and bootshim artifacts.
+- [ ] Real flashing/applying waits for owner-supplied boot image and device.

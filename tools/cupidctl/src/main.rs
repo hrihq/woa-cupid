@@ -1,33 +1,48 @@
+use std::collections::{HashMap, HashSet};
 use std::fs;
 use std::path::{Path, PathBuf};
 use std::process::ExitCode;
 
-fn parse_args(args: &[String]) -> Result<(String, PathBuf), String> {
+struct Args {
+    command: String,
+    root: PathBuf,
+    options: HashMap<String, String>,
+    flags: HashSet<String>,
+}
+
+fn parse_args(args: &[String]) -> Result<Args, String> {
     let mut command = None;
     let mut root = PathBuf::from(".");
+    let mut options = HashMap::new();
+    let mut flags = HashSet::new();
+    let value_flags = ["--root", "--image", "--device", "--slot", "--aml"];
+    let bool_flags = ["--dry-run", "--execute"];
     let mut i = 0;
     while i < args.len() {
-        match args[i].as_str() {
-            "--root" => {
-                i += 1;
-                if i >= args.len() {
-                    return Err("--root needs a path".into());
-                }
-                root = PathBuf::from(&args[i]);
+        let token = args[i].as_str();
+        if value_flags.contains(&token) {
+            i += 1;
+            if i >= args.len() {
+                return Err(format!("{token} needs a value"));
             }
-            s if s.starts_with('-') => return Err(format!("unknown flag: {s}")),
-            s => {
-                if command.is_some() {
-                    return Err("only one command".into());
-                }
-                command = Some(s.to_string());
+            let value = args[i].clone();
+            if token == "--root" {
+                root = PathBuf::from(&value);
             }
+            options.insert(token.trim_start_matches("--").to_string(), value);
+        } else if bool_flags.contains(&token) {
+            flags.insert(token.trim_start_matches("--").to_string());
+        } else if token.starts_with('-') {
+            return Err(format!("unknown flag: {token}"));
+        } else if command.is_none() {
+            command = Some(token.to_string());
+        } else {
+            return Err("only one command".into());
         }
         i += 1;
     }
-    command
-        .map(|c| (c, root))
-        .ok_or_else(|| "command required".into())
+    let command = command.ok_or_else(|| "command required".to_string())?;
+    Ok(Args { command, root, options, flags })
 }
 
 fn manifest_ok(text: &str) -> bool {
@@ -108,12 +123,61 @@ fn verify_drivers(root: &Path) -> Result<usize, String> {
     Ok(manifest.matches("\"id\"").count())
 }
 
+fn acpi_checksum_ok(bytes: &[u8]) -> bool {
+    bytes.len() >= 36 && bytes.iter().fold(0u8, |acc, b| acc.wrapping_add(*b)) == 0
+}
+
+fn acpi_signature(bytes: &[u8]) -> Option<&str> {
+    let sig = std::str::from_utf8(bytes.get(0..4)?).ok()?;
+    (sig.bytes().all(|b| b.is_ascii_alphanumeric())).then_some(sig)
+}
+
+fn flash_image(args: &Args) -> Result<String, String> {
+    let image = args.options.get("image").ok_or("--image required")?;
+    let meta = fs::metadata(image).map_err(|e| format!("image: {e}"))?;
+    if meta.len() < 512 {
+        return Err("image too small (<512 bytes)".into());
+    }
+    let slot = args.options.get("slot").map(String::as_str).unwrap_or("a");
+    if !matches!(slot, "a" | "b") {
+        return Err("--slot must be a or b".into());
+    }
+    if args.flags.contains("execute") {
+        return Err("flashing disabled; use your own fastboot/EDL flow (docs/INSTALL_WINDOWS.md)".into());
+    }
+    Ok(format!(
+        "flash-image: DRY-RUN slot={slot} image={image} bytes={} plan=fastboot flash boot_{slot} {image}",
+        meta.len()
+    ))
+}
+
+fn apply_acpi(args: &Args) -> Result<String, String> {
+    let aml = args.options.get("aml").ok_or("--aml required")?;
+    let bytes = fs::read(aml).map_err(|e| format!("aml: {e}"))?;
+    let sig = acpi_signature(&bytes).ok_or("invalid ACPI signature")?;
+    let declared = u32::from_le_bytes([bytes[4], bytes[5], bytes[6], bytes[7]]) as usize;
+    if declared != bytes.len() {
+        return Err(format!("ACPI length mismatch: header {declared}, file {}", bytes.len()));
+    }
+    if !acpi_checksum_ok(&bytes) {
+        return Err("ACPI checksum failed".into());
+    }
+    if args.flags.contains("execute") {
+        return Err("apply-acpi disabled; stage AML in firmware/out/acpi yourself".into());
+    }
+    Ok(format!(
+        "apply-acpi: DRY-RUN table={sig} len={} checksum=OK plan=firmware/out/acpi/{sig}.aml",
+        bytes.len()
+    ))
+}
+
 fn usage() {
-    println!("cupidctl 0.1 (placeholder)");
+    println!("cupidctl 0.2 (M3 dry-run tooling)");
     println!("  verify-platform --root <dir>   check firmware/config/ACPI/CI files");
     println!("  verify-drivers  --root <dir>   check driver manifest, no tracked blobs");
-    println!("  flash-image     --image <img>  NOT IMPLEMENTED (M3)");
-    println!("  apply-acpi      --aml <file>   NOT IMPLEMENTED (M3)");
+    println!("  flash-image --image <img> [--slot a|b]     validate + print flash plan");
+    println!("  apply-acpi  --aml <file>                    validate AML + print staging plan");
+    println!("  --execute is refused; no partition is written");
 }
 
 fn main() -> ExitCode {
@@ -122,7 +186,7 @@ fn main() -> ExitCode {
         usage();
         return ExitCode::SUCCESS;
     }
-    let (command, root) = match parse_args(&args) {
+    let args = match parse_args(&args) {
         Ok(v) => v,
         Err(e) => {
             eprintln!("cupidctl: {e}");
@@ -130,13 +194,15 @@ fn main() -> ExitCode {
             return ExitCode::from(2);
         }
     };
-    let result = match command.as_str() {
-        "verify-platform" => verify_platform(&root).map(|n| format!("verify-platform: PASS ({n} checks)")),
-        "verify-drivers" => verify_drivers(&root).map(|n| format!("verify-drivers: PASS ({n} entries)")),
-        "flash-image" | "apply-acpi" => {
-            eprintln!("cupidctl {command}: NOT IMPLEMENTED (M3)");
-            return ExitCode::from(2);
+    let result = match args.command.as_str() {
+        "verify-platform" => {
+            verify_platform(&args.root).map(|n| format!("verify-platform: PASS ({n} checks)"))
         }
+        "verify-drivers" => {
+            verify_drivers(&args.root).map(|n| format!("verify-drivers: PASS ({n} entries)"))
+        }
+        "flash-image" => flash_image(&args),
+        "apply-acpi" => apply_acpi(&args),
         other => Err(format!("unknown command: {other}")),
     };
     match result {
@@ -157,16 +223,38 @@ mod tests {
 
     #[test]
     fn parses_root_flag() {
-        let args = ["verify-platform", "--root", "."]
+        let args = ["verify-platform", "--root", "."].map(String::from);
+        let parsed = parse_args(&args).unwrap();
+        assert_eq!(parsed.command, "verify-platform");
+        assert_eq!(parsed.root.as_path(), Path::new("."));
+    }
+
+    #[test]
+    fn parses_command_options() {
+        let args = ["flash-image", "--image", "boot.img", "--slot", "b", "--dry-run"]
             .map(String::from);
-        let (cmd, root) = parse_args(&args).unwrap();
-        assert_eq!(cmd, "verify-platform");
-        assert_eq!(root.as_path(), Path::new("."));
+        let parsed = parse_args(&args).unwrap();
+        assert_eq!(parsed.options.get("image").unwrap(), "boot.img");
+        assert_eq!(parsed.options.get("slot").unwrap(), "b");
+        assert!(parsed.flags.contains("dry-run"));
     }
 
     #[test]
     fn rejects_bad_manifest() {
         assert!(!manifest_ok("{}"));
         assert!(manifest_ok("{\"drivers\":[{\"id\":\"a\",\"source\":\"s\",\"target\":\"t\"},{\"id\":\"b\"},{\"id\":\"c\"},{\"id\":\"d\"}]}"));
+    }
+
+    #[test]
+    fn validates_acpi_checksum() {
+        let mut table = vec![0u8; 36];
+        table[0..4].copy_from_slice(b"DSDT");
+        table[4..8].copy_from_slice(&36u32.to_le_bytes());
+        let sum = table.iter().fold(0u8, |acc, b| acc.wrapping_add(*b));
+        table[9] = 0u8.wrapping_sub(sum);
+        assert_eq!(acpi_signature(&table), Some("DSDT"));
+        assert!(acpi_checksum_ok(&table));
+        table[20] = 1;
+        assert!(!acpi_checksum_ok(&table));
     }
 }

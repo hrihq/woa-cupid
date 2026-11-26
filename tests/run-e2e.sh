@@ -30,4 +30,13 @@ else
   echo "iasl missing; AML compile skipped" >&2
 fi
 
+if command -v cargo >/dev/null; then
+  if [ -f "$OUT/DSDT.aml" ]; then
+    cargo run --quiet -p cupidctl -- apply-acpi --aml "$OUT/DSDT.aml"
+  fi
+  if [ -f "$OUT/cupid_bootshim.elf" ]; then
+    cargo run --quiet -p cupidctl -- flash-image --image "$OUT/cupid_bootshim.elf"
+  fi
+fi
+
 echo "E2E_TIER1_2_PASS"

@@ -22,4 +22,11 @@ if (Get-Command clang -ErrorAction SilentlyContinue) {
     Write-Warning 'clang missing; BootShim compile skipped'
 }
 
+if (Test-Path 'firmware/out/DSDT.aml') {
+    cargo run --quiet -p cupidctl -- apply-acpi --aml 'firmware/out/DSDT.aml'
+}
+if (Test-Path 'firmware/out/cupid_bootshim.elf') {
+    cargo run --quiet -p cupidctl -- flash-image --image 'firmware/out/cupid_bootshim.elf'
+}
+
 Write-Output 'E2E_TIER1_2_PASS'
