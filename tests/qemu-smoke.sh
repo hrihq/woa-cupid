@@ -19,7 +19,7 @@ mcopy -i "$DISK" -o "$EFI" ::/EFI/BOOT/BOOTAA64.EFI
 timeout 60s qemu-system-aarch64 -M virt -cpu cortex-a57 -m 512 -nographic \
   -nodefaults -display none -serial mon:stdio -bios "$BV" \
   -drive if=none,file="$DISK",format=raw,id=disk \
-  -device usb-storage,drive=disk 2>&1 | tee "$LOG" || true
+  -device qemu-xhci,id=xhci -device usb-storage,bus=xhci.0,drive=disk 2>&1 | tee "$LOG" || true
 
 grep -q 'CUPID_DIAG_OK' "$LOG" || { echo "QEMU boot marker absent" >&2; exit 1; }
 echo "E2E_TIER3_PASS"
