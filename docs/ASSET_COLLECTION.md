@@ -54,7 +54,14 @@ dtc -I dtb -O dts assets/private/cupid.dtb -o /tmp/cupid.dts
 ```
 
 Cross-check `Memory32Fixed` bases and IRQs in `firmware/acpi/*.asl` against
-this DTB before any boot attempt.
+this DTB before any boot attempt:
+
+```sh
+python3 tools/check_dtb.py --dtb assets/private/cupid.dtb
+python3 tools/check_dtb.py --self-test   # parser smoke test, no DTB needed
+```
+
+Mismatch output names the exact ASL file and expected MMIO/IRQ value.
 
 ## 4. Windows image
 

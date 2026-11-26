@@ -30,6 +30,10 @@ else
   echo "iasl missing; AML compile skipped" >&2
 fi
 
+if command -v python3 >/dev/null; then
+  python3 tools/check_dtb.py --self-test
+fi
+
 if command -v cargo >/dev/null; then
   if [ -f "$OUT/DSDT.aml" ]; then
     cargo run --quiet -p cupidctl -- apply-acpi --aml "$OUT/DSDT.aml"

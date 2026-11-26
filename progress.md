@@ -10,6 +10,7 @@
 - [x] DSDT + SSDT-CPU/USB/STORAGE/DISPLAY (`firmware/acpi/`)
 - [x] Mu-Silicium integration prerequisites script
 - [x] Aloha `xiaomi-cupid` target scaffold (`firmware/aloha/`, `scripts/add-cupid-target.sh`), tested against a stub checkout
+- [x] DTB↔ACPI cross-check tool (`tools/check_dtb.py`, `--self-test` in CI)
 - [ ] `cupid_bootshim.efi` / AML binaries: produced by CI/releases, not tracked
 
 ### M2 — Drivers / deployment — IN PROGRESS
