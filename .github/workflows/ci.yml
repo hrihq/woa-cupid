@@ -1,0 +1,47 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build-and-verify:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - name: Install toolchain
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            acpica-tools clang lld llvm qemu-system-arm qemu-efi-aarch64 mtools
+
+      - name: Offline verification
+        run: bash tests/run-e2e.sh
+
+      - name: Build diagnostic EFI app
+        run: |
+          mkdir -p firmware/out
+          clang --target=aarch64-pc-windows-msvc -O2 -ffreestanding \
+            -fno-stack-protector -nostdlib -fuse-ld=lld \
+            -Wl,/subsystem:efi_application -Wl,/entry:efi_main -Wl,/nodefaultlib \
+            -o firmware/out/cupid-diag.efi tools/cupid-diag/cupid_diag.c
+          file firmware/out/cupid-diag.efi
+
+      - name: QEMU AAVMF boot smoke
+        run: bash tests/qemu-smoke.sh
+
+      - name: Upload build artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cupid-build-artifacts
+          path: firmware/out/
+          if-no-files-found: warn

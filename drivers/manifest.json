@@ -1,0 +1,51 @@
+{
+  "schema": 1,
+  "note": "Manifest only. No driver binaries are tracked; fetch into drivers/cache/ (gitignored) from your own licensed copies.",
+  "drivers": [
+    {
+      "id": "qcom-waipio-platform",
+      "role": "chipset / PCIe / clock / regulator",
+      "source": "https://github.com/WOA-Project/windows_silicon_qcom_waipio",
+      "target": "Windows/System32/DriverStore",
+      "install": "pnputil /add-driver",
+      "status": "upstream-repo-has-no-binaries",
+      "files": []
+    },
+    {
+      "id": "adreno-gpu",
+      "role": "GPU / display",
+      "source": "https://github.com/WOA-Project/windows_silicon_qcom_waipio",
+      "target": "Windows/System32/DriverStore",
+      "install": "pnputil /add-driver",
+      "status": "not-fetched",
+      "files": []
+    },
+    {
+      "id": "audio-apq",
+      "role": "audio / DSP",
+      "source": "https://github.com/WOA-Project/Qualcomm-Reference-Drivers",
+      "target": "Windows/System32/DriverStore",
+      "install": "pnputil /add-driver",
+      "status": "unverified-for-cupid",
+      "files": []
+    },
+    {
+      "id": "qca6490-wifi",
+      "role": "Wi-Fi / Bluetooth",
+      "source": "https://github.com/WOA-Project/windows_silicon_qcom_waipio",
+      "target": "Windows/System32/DriverStore",
+      "install": "pnputil /add-driver",
+      "status": "not-fetched",
+      "files": []
+    },
+    {
+      "id": "camera-isp",
+      "role": "camera / ISP",
+      "source": "https://github.com/WOA-Project/windows_silicon_qcom_waipio",
+      "target": "Windows/System32/DriverStore",
+      "install": "pnputil /add-driver",
+      "status": "not-fetched",
+      "files": []
+    }
+  ]
+}

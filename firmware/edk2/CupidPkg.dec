@@ -1,0 +1,11 @@
+[Defines]
+  DEC_SPECIFICATION              = 0x00010005
+  PACKAGE_NAME                   = CupidPkg
+  PACKAGE_GUID                   = 2A1B0C74-6D51-4E9F-9A0B-8450CUPID000
+  PACKAGE_VERSION                = 0.1
+
+[Include]
+  CupidPkg/
+
+[Guids]
+  gCupidPkgTokenSpaceGuid = { 0x9f0c2a11, 0x5b7d, 0x4e63, { 0x8a, 0x21, 0x4c, 0x75, 0x10, 0x0a, 0x00, 0x01 } }

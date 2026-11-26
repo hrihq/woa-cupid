@@ -1,0 +1,8 @@
+target/
+Build/
+Binaries/
+*.img
+*.bin
+*.aml
+*.efi
+*.dtb

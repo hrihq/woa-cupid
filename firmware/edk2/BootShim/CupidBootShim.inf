@@ -1,0 +1,16 @@
+[Defines]
+  INF_VERSION                    = 0x00010005
+  BASE_NAME                      = CupidBootShim
+  FILE_GUID                      = 0E1C6A54-8F2B-4D6C-9C11-8450CUPID002
+  MODULE_TYPE                    = SEC
+  VERSION_STRING                 = 1.0
+
+[Sources.AARCH64]
+  ../../cupid_bootshim.S
+
+[Packages]
+  MdePkg/MdePkg.dec
+  CupidPkg/CupidPkg.dec
+
+[BuildOptions]
+  GCC:*_*_AARCH64_ASM_FLAGS = -DREQUIRES_KERNEL_HEADER=1 -DFD_BASE=0xA7100000 -DFD_SIZE=0x300000

@@ -1,0 +1,3 @@
+[workspace]
+members = ["tools/cupidctl"]
+resolver = "2"
