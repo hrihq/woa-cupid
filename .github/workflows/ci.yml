@@ -21,7 +21,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends \
-            acpica-tools clang lld llvm qemu-system-arm qemu-efi-aarch64 mtools
+            acpica-tools clang lld llvm qemu-system-arm qemu-efi-aarch64 mtools gdisk
 
       - name: Offline verification
         run: bash tests/run-e2e.sh

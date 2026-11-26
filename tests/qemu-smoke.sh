@@ -10,14 +10,15 @@ BV="/usr/share/qemu-efi-aarch64/QEMU_EFI.fd"
 [ -f "$BV" ] || { echo "AAVMF firmware missing" >&2; exit 1; }
 
 DISK="firmware/out/bootdisk.img"
+PART="$DISK@@1M"
 dd if=/dev/zero of="$DISK" bs=1M count=16 status=none
-mformat -i "$DISK" -F ::
-mmd -i "$DISK" ::/EFI
-mmd -i "$DISK" ::/EFI/BOOT
-mcopy -i "$DISK" -o "$EFI" ::/EFI/BOOT/BOOTAA64.EFI
+sgdisk -n 1:1M:-1M -t 1:ef00 -c 1:WOA "$DISK" >/dev/null
+mformat -i "$PART" -F ::
+mmd -i "$PART" ::/EFI
+mmd -i "$PART" ::/EFI/BOOT
+mcopy -i "$PART" -o "$EFI" ::/EFI/BOOT/BOOTAA64.EFI
 printf '\\EFI\\BOOT\\BOOTAA64.EFI\r\n' > firmware/out/startup.nsh
-mcopy -i "$DISK" -o firmware/out/startup.nsh ::/startup.nsh
-mdir -i "$DISK" ::/EFI/BOOT
+mcopy -i "$PART" -o firmware/out/startup.nsh ::/startup.nsh
 
 timeout 60s qemu-system-aarch64 -M virt -cpu cortex-a57 -m 512 -nographic \
   -nodefaults -display none -serial mon:stdio -bios "$BV" \

@@ -27,7 +27,13 @@ survey needed to continue, derived from local `hakios-device-cupid` /
 - `https://github.com/WOA-Project/Qualcomm-Reference-Drivers` (reference CABs)
 - `https://github.com/WOA-Project/acpi_oem_qcom_common` (ACPI patterns)
 - `https://github.com/Project-Silicium/Mu-Silicium` (BootShim, DSC/FDF patterns)
+- `https://github.com/Project-Aloha/mu_aloha_platforms` (Project Mu UEFI for
+  Snapdragon; `Platforms/WaipioPkg/Device/qcom-hdk8450` is the SM8450 reference,
+  DSDT support marked ❌; `xiaomi-liuqin` is another SM8450 Xiaomi target)
 - local `hakios-device-cupid/uefi` (cupid memory map, BootShim probes, DTB)
+
+`cupid` is not an upstream Aloha target. Use `qcom-hdk8450` as the EDK2 base
+and port the device's DTB/ACPI on top; do not assume its binaries fit cupid.
 
 ## Constraints
 
