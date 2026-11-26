@@ -3,6 +3,8 @@
  *           replace with a real DriverStore query app once WDK is available.
  */
 typedef unsigned long long UINTN;
+typedef unsigned long long UINT64;
+typedef unsigned int UINT32;
 
 typedef struct EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL;
 struct EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL {
