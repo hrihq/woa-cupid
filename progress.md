@@ -1,5 +1,23 @@
 # Progress
 
+## Readiness score (100 = Windows booted on device)
+
+| Area | Weight | Earned |
+|---|---:|---:|
+| M1 source: BootShim + EDK2 + ACPI | 20 | 20 |
+| Tooling, CI, Tier 1-3 | 20 | 20 |
+| M2 deployment script + docs | 10 | 10 |
+| M3 `cupidctl` dry-run | 10 | 10 |
+| Aloha `xiaomi-cupid` scaffold | 10 | 10 |
+| Vendor UEFI (`xbl` + `Binaries/cupid`) | 15 | 0 |
+| `cupid.dtb` | 5 | 0 |
+| Windows 11 ARM64 `install.wim` | 5 | 0 |
+| Driver binaries | 3 | 0 |
+| Tier 4 physical boot | 2 | 0 |
+| **Total** | **100** | **70** |
+
+Ceiling without owner-supplied assets: **70**. Boot score stays 0 until Tier 4.
+
 ## Wave 1
 
 ### M1 — UEFI platform / BootShim / ACPI — COMPLETE (source only)
