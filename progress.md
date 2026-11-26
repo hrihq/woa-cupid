@@ -27,7 +27,7 @@
 | 3 | QEMU AAVMF boot of `cupid-diag.efi` | PASS in CI (run `45906870235`) |
 | 4 | physical Xiaomi 12 boot | BLOCKED: no vendor blobs / Windows image |
 
-CI: `https://github.com/hrihq/woa-cupid/actions/runs/45906870235` (green).
+CI: `https://github.com/hrihq/woa-cupid/actions/runs/45907554415` (green, termasuk M3 dry-run).
 
 ## Checkpoint: Ready for boot-to-Windows
 
