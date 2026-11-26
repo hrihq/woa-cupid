@@ -15,6 +15,9 @@ mformat -i "$DISK" -F ::
 mmd -i "$DISK" ::/EFI
 mmd -i "$DISK" ::/EFI/BOOT
 mcopy -i "$DISK" -o "$EFI" ::/EFI/BOOT/BOOTAA64.EFI
+printf '\\EFI\\BOOT\\BOOTAA64.EFI\r\n' > firmware/out/startup.nsh
+mcopy -i "$DISK" -o firmware/out/startup.nsh ::/startup.nsh
+mdir -i "$DISK" ::/EFI/BOOT
 
 timeout 60s qemu-system-aarch64 -M virt -cpu cortex-a57 -m 512 -nographic \
   -nodefaults -display none -serial mon:stdio -bios "$BV" \
