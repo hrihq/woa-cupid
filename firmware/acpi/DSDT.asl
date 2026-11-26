@@ -14,22 +14,5 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "CU.PID", "CUPID", 1)
             Name (_UID, One)
             Name (_STA, 0x0F)
         }
-
-        Device (CPU0)
-        {
-            Name (_HID, "ACPI0007")
-            Name (_UID, Zero)
-            Name (_STA, 0x0F)
-        }
-
-        Method (_INI, 0, NotSerialized)
-        {
-            Store (One, \_SB.PCI0.B0LD)
-        }
-    }
-
-    Scope (\_SB.PCI0)
-    {
-        Name (B0LD, One)
     }
 }
