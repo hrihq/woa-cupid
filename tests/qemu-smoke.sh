@@ -13,7 +13,9 @@ DISK="firmware/out/bootdisk.img"
 PART="$DISK@@1M"
 dd if=/dev/zero of="$DISK" bs=1M count=16 status=none
 sgdisk -n 1:1M:-1M -t 1:ef00 -c 1:WOA "$DISK" >/dev/null
-mformat -i "$PART" -F ::
+LOOP="$(sudo losetup -fP --show "$DISK")"
+sudo mkfs.vfat -F 16 -n WOA "${LOOP}p1" >/dev/null
+sudo losetup -d "$LOOP"
 mmd -i "$PART" ::/EFI
 mmd -i "$PART" ::/EFI/BOOT
 mcopy -i "$PART" -o "$EFI" ::/EFI/BOOT/BOOTAA64.EFI
