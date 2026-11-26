@@ -34,11 +34,13 @@ CI runs the same checks, compiles the ACPI tables and BootShim, builds
 `cupid-diag.efi`, and boots it under QEMU AAVMF. A green CI means the
 toolchain and emulator path work. **It does not mean Windows boots on cupid.**
 
-## Flash & boot
+## Assets & boot
 
-See [docs/INSTALL_WINDOWS.md](docs/INSTALL_WINDOWS.md). Flashing unofficial
-firmware can permanently damage the device. Back up `xbl`, `abl` and the
-persistent partitions before any write.
+See [docs/ASSET_COLLECTION.md](docs/ASSET_COLLECTION.md) for the owner-supplied
+`xbl`, DTB, Windows image and UEFI payload checklist; validate with
+`./tests/check-assets.ps1`. See [docs/INSTALL_WINDOWS.md](docs/INSTALL_WINDOWS.md)
+for flashing. Flashing unofficial firmware can permanently damage the device.
+Back up `xbl`, `abl` and the persistent partitions before any write.
 
 ## Hardware status
 

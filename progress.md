@@ -35,6 +35,7 @@ CI: `https://github.com/hrihq/woa-cupid/actions/runs/45907554415` (green, termas
 
 1. Owner-supplied `Binaries/cupid` from their own device (`UEFIReader`).
 2. Owner-supplied `cupid.dtb` and Windows 11 ARM64 `install.wim`.
+   Checklist: `docs/ASSET_COLLECTION.md`, `./tests/check-assets.ps1`.
 3. Device-specific ACPI values validated against that DTB.
 4. Tier 3 green and Tier 4 attempted on a device with backup/restore path.
 

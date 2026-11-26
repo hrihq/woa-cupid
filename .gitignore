@@ -3,6 +3,7 @@ Build/
 build/
 Binaries/
 drivers/cache/
+assets/private/
 firmware/out/
 *.img
 *.bin
