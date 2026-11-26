@@ -1,0 +1,16 @@
+[PcdsFixedAtBuild.common]
+gAndromedaPkgTokenSpaceGuid.PcdMipiFrameBufferWidth|1080
+gAndromedaPkgTokenSpaceGuid.PcdMipiFrameBufferHeight|2400
+gAndromedaPkgTokenSpaceGuid.PcdSmbiosSystemBrand|"Xiaomi"
+gAndromedaPkgTokenSpaceGuid.PcdSmbiosSystemRetailSku|"12"
+gAndromedaPkgTokenSpaceGuid.PcdSmbiosProcessorModel|"Snapdragon (TM) 8 Gen 1"
+gAndromedaPkgTokenSpaceGuid.PcdSmbiosProcessorRetailModel|"SM8450"
+gAndromedaPkgTokenSpaceGuid.PcdABLProduct|"waipio"
+
+[PcdsDynamicDefault.common]
+gEfiMdeModulePkgTokenSpaceGuid.PcdVideoHorizontalResolution|1080
+gEfiMdeModulePkgTokenSpaceGuid.PcdVideoVerticalResolution|2400
+gEfiMdeModulePkgTokenSpaceGuid.PcdSetupConOutColumn|135
+gEfiMdeModulePkgTokenSpaceGuid.PcdSetupConOutRow|126
+gEfiMdeModulePkgTokenSpaceGuid.PcdConOutColumn|135
+gEfiMdeModulePkgTokenSpaceGuid.PcdConOutRow|126
