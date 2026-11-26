@@ -17,7 +17,7 @@ mmd -i "$DISK" ::/EFI/BOOT
 mcopy -i "$DISK" -o "$EFI" ::/EFI/BOOT/BOOTAA64.EFI
 
 timeout 60s qemu-system-aarch64 -M virt -cpu cortex-a57 -m 512 -nographic \
-  -serial mon:stdio -bios "$BV" \
+  -nodefaults -display none -serial mon:stdio -bios "$BV" \
   -drive if=none,file="$DISK",format=raw,id=disk \
   -device usb-storage,drive=disk 2>&1 | tee "$LOG" || true
 
