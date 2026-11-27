@@ -63,6 +63,23 @@ python3 tools/check_dtb.py --self-test   # parser smoke test, no DTB needed
 
 Mismatch output names the exact ASL file and expected MMIO/IRQ value.
 
+## 6. Assemble boot.img
+
+Once `Binaries/cupid` + the UEFI FD are built and `cupid.dtb` is present:
+
+```sh
+python3 tools/build_boot_image.py \
+  --bootshim firmware/out/cupid_bootshim.bin \
+  --fd <path-to-built-uefi-fd.bin> \
+  --dtb assets/private/cupid.dtb \
+  --mkbootimg <mu_aloha_platforms>/Resources/Scripts/mkbootimg.py
+```
+
+Produces `firmware/out/boot.img`: header v4, base `0xA7100000`, kernel =
+`gzip(BootShim || FD) || DTB`. `--mkbootimg` optional (dry-run without it).
+`--self-test` verifies the layout with synthetic data, no assets needed.
+Nothing is flashed.
+
 ## 4. Windows image
 
 Obtain a legitimate Windows 11 ARM64 ISO, mount it, copy `sources/install.wim`

@@ -32,6 +32,7 @@ fi
 
 if command -v python3 >/dev/null; then
   python3 tools/check_dtb.py --self-test
+  python3 tools/build_boot_image.py --self-test
 fi
 
 if command -v cargo >/dev/null; then
