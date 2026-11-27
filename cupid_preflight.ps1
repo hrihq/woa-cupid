@@ -24,7 +24,8 @@ Add-Score 10 $true 'Aloha xiaomi-cupid scaffold'
 # Device / owner-supplied gates.
 $root = (Resolve-Path -LiteralPath $AssetRoot -ErrorAction SilentlyContinue).Path
 $has = { param($n) if (-not $root) { return $false }; Test-Path -LiteralPath (Join-Path $root $n) -PathType Leaf }
-Add-Score 15 ((& $has 'xbl.img') -and (if ($root) { Test-Path -LiteralPath (Join-Path $root 'Binaries/cupid') -PathType Container } else { $false })) 'vendor UEFI (xbl + Binaries/cupid)'
+$hasBinaries = if ($root) { Test-Path -LiteralPath (Join-Path $root 'Binaries/cupid') -PathType Container } else { $false }
+Add-Score 15 ((& $has 'xbl.img') -and $hasBinaries) 'vendor UEFI (xbl + Binaries/cupid)'
 Add-Score 5  (& $has 'cupid.dtb') 'cupid.dtb'
 Add-Score 5  (& $has 'install.wim') 'Windows 11 ARM64 install.wim'
 Add-Score 3  $false 'driver binaries (manifest only)'

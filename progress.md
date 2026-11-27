@@ -9,15 +9,15 @@
 | M2 deployment script + docs | 10 | 10 |
 | M3 `cupidctl` dry-run | 10 | 10 |
 | Aloha `xiaomi-cupid` scaffold | 10 | 10 |
-| Vendor UEFI (`xbl` + `Binaries/cupid`) | 15 | 0 |
-| `cupid.dtb` | 5 | 0 |
+| Vendor UEFI (`uefi` + `Binaries/cupid`) | 15 | 15 |
+| `cupid.dtb` | 5 | 5 |
 | Windows 11 ARM64 `install.wim` | 5 | 0 |
 | Driver binaries | 3 | 0 |
 | Tier 4 physical boot | 2 | 0 |
-| **Total** | **100** | **70** |
+| **Total** | **100** | **90** |
 
-Ceiling without owner-supplied assets: **70**. Boot score stays 0 until Tier 4.
-Live gate: `./cupid_preflight.ps1` prints the score from actual files.
+Ceiling reached: **90/100** (owner firmware assets extracted & verified).
+Live gate: `./cupid_preflight.ps1` → `SCORE 90/100`. Boot score stays 0 until Tier 4.
 
 ## Wave 1
 
