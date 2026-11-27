@@ -48,7 +48,7 @@ Ceiling without owner-supplied assets: **70**. Boot score stays 0 until Tier 4.
 | 3 | QEMU AAVMF boot of `cupid-diag.efi` | PASS in CI (run `45906870235`) |
 | 4 | physical Xiaomi 12 boot | BLOCKED: no vendor blobs / Windows image |
 
-CI: `https://github.com/hrihq/woa-cupid/actions/runs/45910919084` (green, termasuk M3 dry-run + DTB self-test).
+CI: `https://github.com/hrihq/woa-cupid/actions/runs/45915615429` (green, termasuk M3 dry-run + DTB + boot.img self-test).
 
 ## Checkpoint: Ready for boot-to-Windows
 
