@@ -17,6 +17,7 @@
 | **Total** | **100** | **70** |
 
 Ceiling without owner-supplied assets: **70**. Boot score stays 0 until Tier 4.
+Live gate: `./cupid_preflight.ps1` prints the score from actual files.
 
 ## Wave 1
 

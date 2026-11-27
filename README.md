@@ -42,6 +42,11 @@ See [docs/ASSET_COLLECTION.md](docs/ASSET_COLLECTION.md) for the owner-supplied
 for flashing. Flashing unofficial firmware can permanently damage the device.
 Back up `xbl`, `abl` and the persistent partitions before any write.
 
+## Readiness gate
+
+Run `./cupid_preflight.ps1` — prints the weighted score and which owner assets
+are missing. No device writes.
+
 ## Hardware status
 
 See [docs/HARDWARE_STATUS.md](docs/HARDWARE_STATUS.md) and
