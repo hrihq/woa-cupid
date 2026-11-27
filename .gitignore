@@ -5,6 +5,8 @@ Binaries/
 drivers/cache/
 assets/private/
 firmware/out/
+tools/platform-tools/
+tools/bin/
 *.img
 *.bin
 *.aml

@@ -15,6 +15,10 @@ jobs:
         with:
           python-version: '3.11'
 
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
       - uses: dtolnay/rust-toolchain@stable
 
       - name: Install toolchain
@@ -34,6 +38,14 @@ jobs:
             -Wl,/subsystem:efi_application -Wl,/entry:efi_main -Wl,/nodefaultlib \
             -o firmware/out/cupid-diag.efi tools/cupid-diag/cupid_diag.c
           file firmware/out/cupid-diag.efi
+
+      - name: Build UEFIReader for Windows
+        run: |
+          git clone --depth 1 https://github.com/MSMTools/UEFIReader.git /tmp/UEFIReader
+          dotnet publish /tmp/UEFIReader/UEFIReader/UEFIReader.csproj \
+            -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true \
+            -o firmware/out/tools/win-x64
+          ls -la firmware/out/tools/win-x64/
 
       - name: QEMU AAVMF boot smoke
         run: bash tests/qemu-smoke.sh
